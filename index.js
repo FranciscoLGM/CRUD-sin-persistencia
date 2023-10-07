@@ -10,7 +10,7 @@ const port = process.env.PORT || 3000;
 //Middleware
 app.use(express.json());
 
-// Usar el archivo routes.js como un middleware
+// Uso el archivo routes.js como un middleware
 app.use("/alumnos", routes);
 
 //Arrancar el server
