@@ -22,22 +22,22 @@ const findStudentById = (id, data) => {
 };
 
 // Crear un alumno
-router.post(patch, (req, res) => {
-  const { nombre, email, cursos } = req.body;
-  const newAlumno = {
-    id: data.length + 1,
-    nombre,
-    email,
-    cursos,
-  };
-  data.push(newAlumno);
-  res.json(newAlumno);
-});
-
-// Obtener todos los alumnos
-router.get(patch, (req, res) => {
-  res.json(data);
-});
+router
+  .route(patch)
+  .post((req, res) => {
+    const { nombre, email, cursos } = req.body;
+    const newAlumno = {
+      id: data.length + 1,
+      nombre,
+      email,
+      cursos,
+    };
+    data.push(newAlumno);
+    res.json(newAlumno);
+  }) // Obtener todos los alumnos
+  .get((req, res) => {
+    res.json(data);
+  });
 
 // Obtener un alumno por Id
 router
