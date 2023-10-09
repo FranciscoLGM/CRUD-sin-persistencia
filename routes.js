@@ -1,25 +1,10 @@
 import express from "express";
 import data from "./data.js";
+import findStudentById from "./findById.js";
 
 const router = express.Router();
 
 const patch = "/";
-
-// Función para buscar el dato por id
-const findStudentById = (id, data) => {
-  const index = data.findIndex((d) => d.id == id);
-
-  if (index == -1) {
-    throw {
-      code: 404,
-      message: "No se encontró el dato con ese id",
-    };
-  }
-
-  const item = data[index];
-
-  return { index, item };
-};
 
 // Crear un alumno
 router
