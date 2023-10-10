@@ -1,7 +1,7 @@
 import express from "express";
 import data from "./data.js";
 import findStudentById from "./findById.js";
-import userCheck from "./userCheck.js";
+import userCheck from "./validator.js";
 import { validationResult } from "express-validator";
 
 const router = express.Router();
@@ -13,22 +13,21 @@ router
   .route(patch)
   .post(userCheck(), (req, res) => {
     // Validación con express validator
-    const err = validationResult(req);
+    const errors = validationResult(req);
 
-    if (!err.isEmpty()) {
-      return res.status(404).json(err.array());
-    } else {
-      // Si no hay errores se crea el usuario
-      const { nombre, email, cursos } = req.body;
-      const newAlumno = {
-        id: data.length + 1,
-        nombre,
-        email,
-        cursos,
-      };
-      data.push(newAlumno);
-      res.json(newAlumno);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
     }
+    // Si no hay errores se crea el usuario
+    const { nombre, email, cursos } = req.body;
+    const newAlumno = {
+      id: data.length + 1,
+      nombre,
+      email,
+      cursos,
+    };
+    data.push(newAlumno);
+    res.json(newAlumno);
   }) // Obtener todos los alumnos
   .get((req, res) => {
     res.json(data);
@@ -49,24 +48,23 @@ router
     }
   }) // Actualizar un alumno por Id
   .put(userCheck(), (req, res) => {
-    const err = validationResult(req);
+    const errors = validationResult(req);
 
-    if (!err.isEmpty()) {
-      return res.status(404).json(err.array());
-    } else {
-      const alumnoId = parseInt(req.params.id);
-      const body = req.body;
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    const alumnoId = parseInt(req.params.id);
+    const body = req.body;
 
-      try {
-        const { index } = findStudentById(alumnoId, data);
-        data[index] = {
-          ...data[index],
-          ...body,
-        };
-        res.json(data[index]);
-      } catch (err) {
-        res.status(err.code).send(err.message);
-      }
+    try {
+      const { index } = findStudentById(alumnoId, data);
+      data[index] = {
+        ...data[index],
+        ...body,
+      };
+      res.json(data[index]);
+    } catch (err) {
+      res.status(err.code).send(err.message);
     }
   }) //Eliminar un alumno por Id
   .delete((req, res) => {
